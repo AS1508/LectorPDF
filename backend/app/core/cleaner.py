@@ -6,28 +6,28 @@ class TextCleaner:
         pass
         
     def _find_repetitive_headers_footers(self, pages_data):
-        """ Encuentra líneas que se repiten mucho al principio o final de las páginas. """
+        """ Finds highly repetitive lines at the top or bottom of the pages. """
         line_counts = defaultdict(int)
         
-        # Recolectamos posibles cabeceras/pies (primeras y últimas líneas de cada página)
+        # Collect potential headers/footers (first and last lines of each page)
         for p in pages_data:
             lines = [line.strip() for line in p.get("text", "").split('\n') if line.strip()]
             if not lines: continue
             
-            # Revisar las primeras 3 y últimas 3 líneas sin duplicar en páginas muy cortas
+            # Check the first 3 and last 3 lines, avoiding duplicates on extremely short pages
             if len(lines) <= 6:
                 boundary_lines = lines
             else:
                 boundary_lines = lines[:3] + lines[-3:]
             for bline in boundary_lines:
-                # Quitamos todos los dígitos para ignorar números de página, ej: '86 Capítulo 4' -> ' Capítulo '
+                # Remove all digits to ignore page numbers, e.g. '86 Chapter 4' -> ' Chapter '
                 normalized = re.sub(r'\d+', '', bline).strip()
-                # Si tiene suficiente texto, lo contamos
+                # If it has enough text length, count it
                 if len(normalized) > 5:
                     line_counts[normalized] += 1
                     
-        # Consideramos 'cabecera ruidosa' si la línea normalizada aparece en más del 15% de las hojas
-        # Usamos max(2, ...) para que funcione también en PDF cortitos de prueba (mínimo 2 apariciones)
+        # Consider it a 'noisy header' if the normalized line appears in more than 15% of the pages
+        # Use max(2, ...) to ensure it works on short test PDFs (minimum 2 occurrences)
         threshold = max(2, len(pages_data) * 0.15)
         repetitive_patterns = {k for k, v in line_counts.items() if v >= threshold}
         
@@ -35,31 +35,31 @@ class TextCleaner:
 
     def clean_text_list(self, pages_data):
         """
-        Limpia el texto extraído página por página.
-        - Elimina dinámicamente Headers basados en algoritmos de repetición.
-        - Reconstruye párrafos y borra guiones fantasma.
+        Cleans the extracted text page by page.
+        - Dynamically removes headers based on repetition algorithms.
+        - Reconstructs paragraphs and removes ghost hyphens.
         """
-        # 1. Aprender cuáles son las cabeceras/pies de página
+        # 1. Learn which lines are headers/footers
         repetitive_patterns = self._find_repetitive_headers_footers(pages_data)
         
         cleaned_pages = []
         for p in pages_data:
-            # 2. Separar página en líneas individuales
+            # 2. Split page into individual lines
             lines = [line.strip() for line in p.get("text", "").split('\n') if line.strip()]
             filtered_lines = []
             
-            # 3. Filtrar y eliminar el ruido detectado
+            # 3. Filter and remove detected noise
             for line in lines:
                 normalized = re.sub(r'\d+', '', line).strip()
-                # Si la linea es la cabecera repetitiva y larga, la matamos
+                # If line is a repetitive and long header, remove it
                 if normalized in repetitive_patterns and len(normalized) > 5:
                     continue
                 filtered_lines.append(line)
             
-            # 4. Volver a unir las líneas que sobrevivieron
+            # 4. Rejoin surviving lines
             text = '\n'.join(filtered_lines)
             
-            # 5. Lógica clásica: Remover guiones de fin de línea y curar saltos de carro
+            # 5. Classic logic: Remove end-of-line hyphens and cure carriage returns
             text = re.sub(r'-\s*\n\s*', '', text)
             text = re.sub(r'(?<![.\!\?])\s*\n\s*', ' ', text)
             text = re.sub(r'\s{2,}', ' ', text)

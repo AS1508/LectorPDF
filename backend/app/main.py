@@ -21,11 +21,11 @@ os.makedirs("uploads", exist_ok=True)
 
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File(...), lang: str = Form("es")):
-    # Security: Validar Mime-Type
+    # Security: Validate Mime-Type
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail="Only PDF files are allowed.")
     
-    # Security: Validar límite de 50MB (Spool limit API)
+    # Security: Validate 50MB limit (Spool limit API)
     MAX_MB = 50 * 1024 * 1024
     file.file.seek(0, 2)
     file_size = file.file.tell()
@@ -33,22 +33,22 @@ async def upload_pdf(file: UploadFile = File(...), lang: str = Form("es")):
         raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="File exceeds 50MB limit.")
     file.file.seek(0)
     
-    # Security: Aislar nombre del archivo (Path Traversal Protection)
+    # Security: Isolate filename (Path Traversal Protection)
     safe_filename = os.path.basename(file.filename)
     file_location = f"uploads/{safe_filename}"
     
     with open(file_location, "wb+") as file_object:
         shutil.copyfileobj(file.file, file_object)
 
-    # 1. Extraer (El Cerebro)
+    # 1. Extract (The Parser)
     parser = PDFParser(file_location)
     raw_pages = parser.extract_text()
     
-    # 2. Limpiar
+    # 2. Clean text chunks
     cleaner = TextCleaner()
     clean_pages = cleaner.clean_text_list(raw_pages)
 
-    # 3. Preparar para TTS (Chunking)
+    # 3. Prepare for TTS (Chunking)
     tts = TTSHandler(lang=lang)
     final_output = []
 
@@ -59,7 +59,7 @@ async def upload_pdf(file: UploadFile = File(...), lang: str = Form("es")):
             "chunks": chunks
         })
 
-    # Eliminamos el archivo temp (opcional, por ahora lo dejamos o lo borramos para no hacer clutering de RAM)
+    # Delete temp file to avoid persistent disk clutter
     os.remove(file_location)
 
     return {"filename": safe_filename, "document": final_output}

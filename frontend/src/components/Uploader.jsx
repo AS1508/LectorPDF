@@ -19,10 +19,10 @@ export default function Uploader({ onUploadSuccess }) {
 
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('lang', 'es'); // Default por el momento
+    formData.append('lang', 'es'); // Default for now
 
     try {
-      // Configuramos para llamar al backend tomando la URL dinámica para Docker/Producción
+      // Configure to call backend using dynamic URL for Docker/Production
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       const response = await fetch(`${apiUrl}/upload`, {
         method: 'POST',
@@ -34,7 +34,7 @@ export default function Uploader({ onUploadSuccess }) {
       }
 
       const data = await response.json();
-      // data.document tiene el array de páginas y chunks
+      // data.document holds the array of pages and chunks
       onUploadSuccess(data);
     } catch (err) {
       setError(err.message);

@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+const STATUS_NOT_READING = -1;
+
 export default function Reader({ documentData, onBack }) {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const [currentChunkIndex, setCurrentChunkIndex] = useState(-1); // -1 significa no leyendo
+  const [currentChunkIndex, setCurrentChunkIndex] = useState(STATUS_NOT_READING);
   const [isPlaying, setIsPlaying] = useState(false);
   
-  // Ref para el engine Text To Speech
+  // Ref for the Text-to-Speech Engine
   const synthRef = useRef(window.speechSynthesis);
   const utteranceRef = useRef(null);
 
   const pages = documentData.document;
   const currentPage = pages[currentPageIndex] || { chunks: [] };
 
-  // Guardar marcador en el storage
+  // Save bookmark to local storage
   useEffect(() => {
     localStorage.setItem('lectorpdf_bookmark', JSON.stringify({
       filename: documentData.filename,
@@ -20,25 +22,25 @@ export default function Reader({ documentData, onBack }) {
     }));
   }, [currentPageIndex, documentData.filename]);
 
-  // Manejar reproducción "Karaoke"
+  // Handle "Karaoke" playback sync
   useEffect(() => {
-    // Si reproducimos...
+    // If playing...
     if (isPlaying && currentChunkIndex < currentPage.chunks.length) {
       const textToRead = currentPage.chunks[currentChunkIndex];
       if (!textToRead) {
-        // Fin de página
+        // End of page reached
         handleNextPage();
         return;
       }
 
-      synthRef.current.cancel(); // Parar audios anteriores
+      synthRef.current.cancel(); // Stop previous audios
 
       const utterance = new SpeechSynthesisUtterance(textToRead);
-      utterance.lang = 'es-ES'; // Default, idealmente vendria como parametro
+      utterance.lang = 'es-ES'; // Default, ideally received as parameter
       utterance.rate = 1.0;
       
       utterance.onend = () => {
-        // Avanza al siguiente chunk
+        // Move to the next chunk
         setCurrentChunkIndex((prev) => prev + 1);
       };
 
@@ -52,7 +54,7 @@ export default function Reader({ documentData, onBack }) {
       synthRef.current.speak(utterance);
     } 
     
-    // Si pauso, cancelo pero mantengo el indice
+    // If paused, cancel audio but keep the index
     if (!isPlaying) {
       synthRef.current.cancel();
     }
@@ -64,8 +66,8 @@ export default function Reader({ documentData, onBack }) {
   }, [isPlaying, currentChunkIndex, currentPageIndex]);
 
   const toggleReading = () => {
-    if (!isPlaying && currentChunkIndex === -1) {
-      // Empieza nuevo
+    if (!isPlaying && currentChunkIndex === STATUS_NOT_READING) {
+      // Start from beginning
       setCurrentChunkIndex(0);
     }
     setIsPlaying(!isPlaying);
@@ -74,10 +76,10 @@ export default function Reader({ documentData, onBack }) {
   const handleNextPage = () => {
     if (currentPageIndex < pages.length - 1) {
       setCurrentPageIndex(prev => prev + 1);
-      setCurrentChunkIndex(0); // auto reset para la nueva página
+      setCurrentChunkIndex(0); // Auto-reset for the new page
     } else {
       setIsPlaying(false);
-      setCurrentChunkIndex(-1); // Fin del libro
+      setCurrentChunkIndex(STATUS_NOT_READING); // End of book
     }
   };
 
@@ -101,7 +103,7 @@ export default function Reader({ documentData, onBack }) {
         </div>
       </div>
 
-      {/* Area de Lectura tipo Reflow */}
+      {/* Reflow-style Reading Area */}
       <div className="glass-panel" style={{ flex: 1, padding: '3rem', overflowY: 'auto', textAlign: 'left', lineHeight: '1.8', fontSize: '1.2rem' }}>
         {currentPage.chunks.length === 0 ? (
           <div>No hay texto legible en esta página.</div>
@@ -125,7 +127,7 @@ export default function Reader({ documentData, onBack }) {
         )}
       </div>
 
-      {/* Controles Smart */}
+      {/* Smart Controls */}
       <div className="controls glass-panel" style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '2rem', padding: '1rem' }}>
         <button onClick={handlePrevPage} disabled={currentPageIndex === 0} style={{ background: 'var(--surface-color)' }}>
           Anterior Pág.

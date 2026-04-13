@@ -6,25 +6,25 @@ class PDFParser:
         self.file_path = file_path
     
     def extract_toc(self):
-        """Intenta extraer el índice de marcadores nativos del PDF."""
-        # En pdfplumber no hay una obtención directa de estructurados TOC fácil sin explorar los metadatos raw.
-        # Simparemos una heurística o estructura básica.
-        # Por simplicidad, leeremos páginas completas.
-        return [{"level": 1, "title": "Inicio del Documento", "page": 1}]
+        """Attempts to extract native bookmark structure (TOC) from the PDF."""
+        # pdfplumber does not have a native method to extract TOC easily without exploring raw metadata.
+        # We will simulate a heuristic or basic structure.
+        # For simplicity, we will read full pages.
+        return [{"level": 1, "title": "Start of Document", "page": 1}]
     
     def extract_text(self):
-        """Extrae el texto crudo página por página, usando los bounding_boxes para mantener columnas."""
+        """Extracts raw text page by page, using bounding_boxes to respect columns."""
         extracted_pages = []
         try:
             with pdfplumber.open(self.file_path) as pdf:
                 for page_num, page in enumerate(pdf.pages):
-                    # Recortar el 8% superior y 8% inferior para evitar headers y footers espurios
+                    # Crop the top 8% and bottom 8% to avoid spurious headers and footers
                     width = page.width
                     height = page.height
                     bbox = (0, height * 0.08, width, height * 0.92)
                     cropped_page = page.crop(bbox)
                     
-                    # Extraer texto de izquierda a derecha, de arriba a abajo.
+                    # Extract text from left to right, top to bottom.
                     text = cropped_page.extract_text(x_tolerance=2, y_tolerance=3)
                     if text:
                         extracted_pages.append({
