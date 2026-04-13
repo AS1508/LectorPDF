@@ -19,25 +19,34 @@ LectorPDF es una aplicación web interactiva Full-Stack diseñada para transform
 
 ## 🚀 Guía de Instalación y Uso
 
-Necesitarás tener instalados [Node.js](https://nodejs.org/es/) (para Vite y Vitest) y [Python 3](https://www.python.org/downloads/) en tu computadora.
+### A. Ejecución Express con Docker (Recomendado)
+Para arrancar el proyecto directamente sin configurar ninguna librería ni instalar Node o Python, debes correr nuestro orquestador central (requiere que tengas instalada la aplicación [Docker Desktop](https://www.docker.com/products/docker-desktop/)):
+```bash
+git clone https://github.com/tu-usuario/LectorPDF.git
+cd LectorPDF
+docker-compose up --build
+```
+¡Ya está! Entra visualmente en `http://localhost:5173`. Tus APIs en Python arrancarán bajo un contenedor sellado y tu Frontend se empacará y servirá nativamente vía `Nginx`.
 
-### 1. Clonar el Repositorio
+### B. Modo Desarrollo (Instalación Manual)
+
+Si deseas modificar código y desarrollar la plataforma, necesitarás instalar ambos motores por separado.
+
+#### 1. Clonar el Repositorio
 ```bash
 git clone https://github.com/tu-usuario/LectorPDF.git
 cd LectorPDF
 ```
 
-### 2. Levantar el Motor Backend (Python)
+#### 2. Levantar el Motor Backend (Python)
 Abre un terminal y sitúate en la carpeta `/backend`:
 ```bash
 cd backend
 python -m venv venv
 # Activar entorno (Windows):
 .\venv\Scripts\activate
-# Activar entorno (Mac/Linux):
-source venv/bin/activate
 
-pip install -r requirements.txt
+pip install .
 python -m uvicorn app.main:app --reload
 ```
 *La API quedará escuchando silenciosa y segura en `http://localhost:8000`.*
