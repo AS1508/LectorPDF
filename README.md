@@ -1,15 +1,15 @@
-# LectorPDF Inteligente 🎧📄
+# LectorPDF Inteligente 
 
 LectorPDF es una aplicación web interactiva Full-Stack diseñada para transformar verdaderos mamotretos de estudio y libros en PDF en audiolibros interactivos, con cero fricción visual. A diferencia de lectores de pantalla tradicionales que leen números de página molestos o cabeceras repetitivas, nuestro LectorPDF limpia y reconstruye quirúrgicamente los párrafos reales brindando una visualización moderna fluida con sincronización estilo Karaoke.
 
-## ✨ Características Principales
+## Características Principales
 
-* 🧠 **Reconstrucción Táctil de Texto:** Detecta y corta algorítmicamente encabezados estadísticamente repetitivos y *footers*, arreglando sílabas separadas por el salto de línea.
-* 🗣️ **Lectura Inteligente (Karaoke-Sync):** No te pierdas mientras escuchas. La interfaz en tiempo real ilumina en amarillo incandescente la frase exacta en la que se encuentra la voz robótica de tu computadora.
-* 🛡️ **Seguridad Nativa Integrada:** Subidas cifradas protegidas contra Path Traversal, Falsificación de MIME Types y ataques de Carga (límite duro a 50MB por PDF).
-* 🕹️ **Interfaz Premium Glassmorphism:** Entorno visual *dark mode*, reactivo, relajante e intuitivo para pasar páginas en fracciones de segundo.
+* **Reconstrucción Táctil de Texto:** Detecta y corta algorítmicamente encabezados estadísticamente repetitivos y *footers*, arreglando sílabas separadas por el salto de línea.
+* **Lectura Inteligente (Karaoke-Sync):** No te pierdas mientras escuchas. La interfaz en tiempo real ilumina en amarillo incandescente la frase exacta en la que se encuentra la voz robótica de tu computadora.
+* **Seguridad Nativa Integrada:** Subidas cifradas protegidas contra Path Traversal, Falsificación de MIME Types y ataques de Carga (límite duro a 50MB por PDF).
+* **Interfaz Premium Glassmorphism:** Entorno visual *dark mode*, reactivo, relajante e intuitivo para pasar páginas en fracciones de segundo.
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 * **Frontend:** React + Vite + Javascript Nativo
 * **Backend:** Python + FastAPI + pdfplumber
@@ -17,7 +17,7 @@ LectorPDF es una aplicación web interactiva Full-Stack diseñada para transform
 
 ---
 
-## 🚀 Guía de Instalación y Uso
+## Guía de Instalación y Uso
 
 ### A. Ejecución Express con Docker (Recomendado)
 Para arrancar el proyecto directamente sin configurar ninguna librería ni instalar Node o Python, debes correr nuestro orquestador central (requiere que tengas instalada la aplicación [Docker Desktop](https://www.docker.com/products/docker-desktop/)):
@@ -62,7 +62,7 @@ npm run dev
 
 
 
-## 🧪 Pruebas y Desarrollo (CI/CD Local)
+## Pruebas y Desarrollo (CI/CD Local)
 Todas las herramientas para probar el sistema vienen integradas:
 * **Pruebas de Seguridad Backend:** Estando en `/backend` corre `python -m pytest tests/`
 * **Pruebas de DOM Frontend:** Estando en `/frontend` corre `npm run test`
