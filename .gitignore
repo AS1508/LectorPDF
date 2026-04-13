@@ -1,0 +1,23 @@
+# Archivos de SO
+.DS_Store
+Thumbs.db
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.eslintcache
+
+# Backend
+backend/venv/
+backend/env/
+backend/__pycache__/
+backend/.pytest_cache/
+backend/uploads/
+*.pyc
+*.pyo
+*.pyd
+
+# IDEs
+.vscode/
+.idea/
