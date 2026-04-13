@@ -1,71 +1,69 @@
-# LectorPDF Inteligente 
+# Smart LectorPDF
 
-LectorPDF es una aplicación web interactiva Full-Stack diseñada para transformar verdaderos mamotretos de estudio y libros en PDF en audiolibros interactivos, con cero fricción visual. A diferencia de lectores de pantalla tradicionales que leen números de página molestos o cabeceras repetitivas, nuestro LectorPDF limpia y reconstruye quirúrgicamente los párrafos reales brindando una visualización moderna fluida con sincronización estilo Karaoke.
+LectorPDF is a Full-Stack interactive web application designed to transform hefty study books and PDFs into interactive audiobooks, with zero visual friction. Unlike traditional screen readers that annoyingly read page numbers or repetitive headers, our LectorPDF surgically cleans and reconstructs the real paragraphs, providing a fluid modern visualization with Karaoke-style synchronization.
 
-## Características Principales
+## Core Features
 
-* **Reconstrucción Táctil de Texto:** Detecta y corta algorítmicamente encabezados estadísticamente repetitivos y *footers*, arreglando sílabas separadas por el salto de línea.
-* **Lectura Inteligente (Karaoke-Sync):** No te pierdas mientras escuchas. La interfaz en tiempo real ilumina en amarillo incandescente la frase exacta en la que se encuentra la voz robótica de tu computadora.
-* **Seguridad Nativa Integrada:** Subidas cifradas protegidas contra Path Traversal, Falsificación de MIME Types y ataques de Carga (límite duro a 50MB por PDF).
-* **Interfaz Premium Glassmorphism:** Entorno visual *dark mode*, reactivo, relajante e intuitivo para pasar páginas en fracciones de segundo.
+* **Tactile Text Reconstruction:** Algorithmically detects and cuts out statistically repetitive headers and footers, fixing syllables broken by line breaks.
+* **Smart Reading (Karaoke-Sync):** Don't lose your place while listening. The real-time interface illuminates the exact phrase the robotic voice of your computer is currently reading in glowing yellow.
+* **Native Built-in Security:** Encrypted uploads protected against Path Traversal, MIME Type Spoofing, and Payload attacks (hard limit to 50MB per PDF).
+* **Premium Glassmorphism Interface:** Dark mode visual environment, reactive, relaxing, and intuitive to turn pages in fractions of a second.
 
-## Stack Tecnológico
+## Tech Stack
 
-* **Frontend:** React + Vite + Javascript Nativo
+* **Frontend:** React + Vite + Vanilla Javascript
 * **Backend:** Python + FastAPI + pdfplumber
-* **Suite de Testing (QA):** Vitest + React Testing Library (Front) y Pytest + httpx (Back)
+* **Testing Suite (QA):** Vitest + React Testing Library (Front) and Pytest + httpx (Back)
 
 ---
 
-## Guía de Instalación y Uso
+## Installation & Usage Guide
 
-### A. Ejecución Express con Docker (Recomendado)
-Para arrancar el proyecto directamente sin configurar ninguna librería ni instalar Node o Python, debes correr nuestro orquestador central (requiere que tengas instalada la aplicación [Docker Desktop](https://www.docker.com/products/docker-desktop/)):
+### A. Express Execution via Docker (Recommended)
+To run the project directly without configuring any libraries or installing Node/Python, you must run our central orchestrator (requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) to be installed):
 ```bash
-git clone https://github.com/tu-usuario/LectorPDF.git
+git clone https://github.com/your-username/LectorPDF.git
 cd LectorPDF
 docker-compose up --build
 ```
-¡Ya está! Entra visualmente en `http://localhost:5173`. Tus APIs en Python arrancarán bajo un contenedor sellado y tu Frontend se empacará y servirá nativamente vía `Nginx`.
+That's it! Enter visually at `http://localhost:5173`. Your Python APIs will boot under an isolated container and your Frontend will be packaged and served natively via `Nginx`.
 
-### B. Modo Desarrollo (Instalación Manual)
+### B. Development Mode (Manual Installation)
 
-Si deseas modificar código y desarrollar la plataforma, necesitarás instalar ambos motores por separado.
+If you wish to modify code and develop the platform, you will need to install both engines separately.
 
-#### 1. Clonar el Repositorio
+#### 1. Clone the Repository
 ```bash
-git clone https://github.com/tu-usuario/LectorPDF.git
+git clone https://github.com/your-username/LectorPDF.git
 cd LectorPDF
 ```
 
-#### 2. Levantar el Motor Backend (Python)
-Abre un terminal y sitúate en la carpeta `/backend`:
+#### 2. Boot the Backend Engine (Python)
+Open a terminal and navigate to the `/backend` folder:
 ```bash
 cd backend
 python -m venv venv
-# Activar entorno (Windows):
+# Activate environment (Windows):
 .\venv\Scripts\activate
 
 pip install .
 python -m uvicorn app.main:app --reload
 ```
-*La API quedará escuchando silenciosa y segura en `http://localhost:8000`.*
+*The API will listen silently and securely on `http://localhost:8000`.*
 
-### 3. Levantar la Interfaz Frontend (React)
-Abre otro terminar y sitúate en la carpeta `/frontend`:
+### 3. Boot the Frontend Interface (React)
+Open another terminal and navigate to the `/frontend` folder:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-*Se desplegará el entorno interactivo en `http://localhost:5173`. Abre este último enlace en tu navegador, sube un PDF y disfruta.*
+*The interactive environment will be deployed at `http://localhost:5173`. Open this link in your browser, upload a PDF, and enjoy.*
 
-
-
-## Pruebas y Desarrollo (CI/CD Local)
-Todas las herramientas para probar el sistema vienen integradas:
-* **Pruebas de Seguridad Backend:** Estando en `/backend` corre `python -m pytest tests/`
-* **Pruebas de DOM Frontend:** Estando en `/frontend` corre `npm run test`
+## Testing and Development (Local CI/CD)
+All tools to test the system come built-in:
+* **Backend Security Tests:** Inside `/backend` run `python -m pytest tests/`
+* **Frontend DOM Tests:** Inside `/frontend` run `npm run test`
 
 ---
-*Desarrollado con pasión para hacer la lectura intensiva accesible a todos.*
+*Developed with passion to make intensive reading accessible to everyone.*
