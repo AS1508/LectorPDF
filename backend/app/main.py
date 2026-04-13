@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import os
@@ -21,7 +21,22 @@ os.makedirs("uploads", exist_ok=True)
 
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File(...), lang: str = Form("es")):
-    file_location = f"uploads/{file.filename}"
+    # Security: Validar Mime-Type
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail="Only PDF files are allowed.")
+    
+    # Security: Validar límite de 50MB (Spool limit API)
+    MAX_MB = 50 * 1024 * 1024
+    file.file.seek(0, 2)
+    file_size = file.file.tell()
+    if file_size > MAX_MB:
+        raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="File exceeds 50MB limit.")
+    file.file.seek(0)
+    
+    # Security: Aislar nombre del archivo (Path Traversal Protection)
+    safe_filename = os.path.basename(file.filename)
+    file_location = f"uploads/{safe_filename}"
+    
     with open(file_location, "wb+") as file_object:
         shutil.copyfileobj(file.file, file_object)
 
@@ -47,4 +62,4 @@ async def upload_pdf(file: UploadFile = File(...), lang: str = Form("es")):
     # Eliminamos el archivo temp (opcional, por ahora lo dejamos o lo borramos para no hacer clutering de RAM)
     os.remove(file_location)
 
-    return {"filename": file.filename, "document": final_output}
+    return {"filename": safe_filename, "document": final_output}
